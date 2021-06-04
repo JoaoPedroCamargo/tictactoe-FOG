@@ -8,7 +8,7 @@ const Home: React.FC = () => {
   const history = useHistory();
 
   function goToDificulty() {
-    history.push('/gameDificulty');
+    history.push('/singleplayer');
   }
 
   function goToMultiplayer() {
@@ -25,7 +25,7 @@ const Home: React.FC = () => {
       <MenuContainer>
         <button onClick={goToDificulty}>Single Player</button>
         <button onClick={goToMultiplayer}>Multiplayer</button>
-        <button onClick={goToHowToPlay}>How to Play</button>
+        <button onClick={goToHowToPlay}>Como jogar</button>
       </MenuContainer>
       
       

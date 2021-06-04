@@ -4,210 +4,119 @@ import Square from '../Square/index';
 
 import {ContainerRow, ContainerColumn, TitleContainer} from './styles';
 
-type SYMBOL = 'X' | 'O';
-type BLOCK = SYMBOL | '-';
+import minimax from '../../utils/minimax';
+import Board from '../../utils/board';
 
 interface BoardProps {
-  gameMode: 'easy' | 'meddium' | 'hard' | 'pvp' | 'online';
+  gameMode: GameProps | 'local' | 'online';
 }
 
-const Board: React.FC<BoardProps> = ({ gameMode }) => {
-   const [board, setBoard] = useState<BLOCK[]>([
-    '-',
-    '-',
-    '-',
-    '-',
-    '-',
-    '-',
-    '-',
-    '-',
-    '-',
-  ]);
-  const [startingTurn, setStartingTurn] = useState<SYMBOL>('X');
-  const [Xturn, setXTurn] = useState<boolean>(startingTurn === 'X');
+type playerProps = 'X' | 'O';
+type gridProps = playerProps | null;
+type GameProps = 'easy' | 'meddium' | 'hard';
+type winnerProps = playerProps | 'DRAW' | 'noWinner' | null;
 
-  
+const arr = new Array(9).fill(null);
 
-  function handleClick(index: number) {
-    if(board[index] === '-') {
-      const newBoard = [...board];
-      newBoard[index] = Xturn ? 'X' : 'O';
-      setXTurn(!Xturn);
-      setBoard(newBoard);
-    }
-  }
+const GameBoard: React.FC<BoardProps> = ({ gameMode }) => {
+  const [Xturn, setXturn] = useState<boolean>(true);
+  const [startingPlayer, setStartingPlayer] = useState<playerProps>('X');
+  const [grid, setGrid] = useState<gridProps[]>(arr);
 
-  function isBoardFull() {
-    for(var i = 0; i < 9; i++){
-      if(board[i] === '-'){
-        return false;
-      }
-    }
+  const move  = useCallback((index) => {
+    const gridCopy = grid.concat();
+      
+    gridCopy[index] = Xturn ? 'X' : 'O';
+    setGrid(gridCopy);
+    setXturn(!Xturn);
+    }, [Xturn, grid]
+  );
 
-    return true;
-  }
+  const IAmove = useCallback(() => {
+    const board = new Board(grid.concat());
+    const emptyIndices = board.getEmptyPos(grid);
 
-  function minimax(Board: BLOCK[], depth: number, isMaximazing: boolean){
-    const result = evaluateWinner(Board);
-    if(result !== 0){
-      return result;
-    }
+    let indexMove;
 
-    else if(isMaximazing) {
-      let bestScore: number = -1000;
-      let testBoard = board;
-
-      for(let i = 0; i < 9; i++){
-        if(testBoard[i] === '-'){
-          testBoard[i] = 'O';
-          bestScore = Math.max(bestScore, minimax(testBoard, depth + 1, !isMaximazing));
-          testBoard[i] = '-';
+    switch (gameMode) {
+      case 'easy':
+        const moveProbEasy = !board.isEmpty(grid) && Math.random() < 0.5;
+        if (moveProbEasy) {
+          indexMove = minimax(board, Xturn)[1];
+        } else {
+          do{
+            indexMove = Math.round(Math.random() * 8);
+          } while(!emptyIndices.includes(indexMove));
         }
-      }
+        break;
 
-      return bestScore;
+        case 'meddium':
+          const moveProbMeddium = !board.isEmpty(grid) && Math.random() < 0.7;
+          if (moveProbMeddium) {
+            indexMove = minimax(board, Xturn)[1];
+          } else {
+            do{
+              indexMove = Math.round(Math.random() * 8);
+            } while(!emptyIndices.includes(indexMove));
+          }
+          break;
 
-    } else {
-      let bestScore: number = 1000;
-      let testBoard = board;
-
-      for(let i = 0; i < 9; i++){
-        if(testBoard[i] === '-'){
-          testBoard[i] = 'X';
-          bestScore = Math.min(bestScore, minimax(testBoard, depth + 1, !isMaximazing));
-          testBoard[i] = '-';
-        }
-      }
-
-      return bestScore;
-    }
-  }
-
-  function AiMove() {
-    let bestScore = -1000;
-    let bestMove = -1;
-    let testBoard = board;
-    let score = 0;
-
-    testBoard.map((value, index) => {
-      if(value === '-'){
-        value = 'O';
-        score = minimax(testBoard, 0, false);
-        value = '-';
-        console.log(value)
-        if (score > bestScore) {
-          bestScore = score;
-          bestMove = index;
-        }
-      }
-      return null;
-    });
-
-    if(bestMove !== -1){
-      if(board[bestMove] === '-') {
-        const newBoard = [...board];
-        newBoard[bestMove] = 'O';
-        setXTurn(!Xturn);
-        setBoard(newBoard);
-      }
-    }
-  }
-
-  function evaluateWinner(Board: BLOCK[]) {
-    if(Board[0] === Board[1] && Board[0] === Board[2] && Board[0] !== '-'){
-      if(board[0] === 'X') {
-        return -10;
-      } else {
-        return 10
-      }
+        case 'hard':
+          default:
+            indexMove = board.isEmpty(grid) ? Math.round(Math.random() * 8) : minimax(board, Xturn)[1];
     }
 
-    if(Board[3] === Board[4] && Board[3] === Board[5] && Board[3] !== '-'){
-      if(Board[3] === 'X') {
-        return -10;
-      } else {
-        return 10
-      }
+    if(!grid[indexMove]){
+      move(indexMove);
     }
-    
-    if(Board[6] === Board[7] && Board[6] === Board[8] && Board[6] !== '-'){
-      if(Board[6] === 'X') {
-        return -10;
-      } else {
-        return 10
-      }
-    } 
-    
-    if (Board[0] === Board[3] && Board[0] === Board[6] && Board[0] !== '-'){
-      if(Board[0] === 'X') {
-        return -10;
-      } else {
-        return 10
-      }
-    }
+  },[Xturn, gameMode, grid, move]);
 
-    if (Board[1] === Board[4] && Board[1] === Board[7] && Board[1] !== '-'){
-      if(Board[1] === 'X') {
-        return -10;
-      } else {
-        return 10
-      }
+  useEffect(() => {
+    if (!Xturn && gameMode !== 'local'){
+      IAmove();
+      setXturn(!Xturn);
     }
+  }, [IAmove, Xturn, gameMode]);
 
-    if (Board[2] === Board[5] && Board[2] === Board[8] && Board[2] !== '-'){
-      if(Board[2] === 'X') {
-        return -10;
-      } else {
-        return 10
-      }
+  const handleClick = (index: number) => {
+    if(grid[index] === null) {
+      move(index);
+      setXturn(!Xturn);
     }
-
-    if (Board[0] === Board[4] && Board[0] === Board[8] && Board[0] !== '-'){
-      if(Board[0] === 'X') {
-        return -10;
-      } else {
-        return 10
-      }
-    }
-
-    if (Board[2] === Board[4] && Board[2] === Board[6] && Board[2] !== '-'){
-      if(Board[2] === 'X') {
-        return -10;
-      } else {
-        return 10
-      }
-    }
-
-    return 0;
   }
 
   useEffect(() => {
-    if(!Xturn) {
-      console.log(board);
-      AiMove();
+    const board = new Board(grid.concat());
+    const winner = board.getWinner(grid);
+    const declareWinner = (winner: winnerProps) => {
+
+      switch (winner) {
+        case 'X':
+          alert('Player X wins!');
+          setXturn(startingPlayer === 'X');
+          setStartingPlayer(startingPlayer === 'X' ? 'O' : 'X');
+          setGrid(arr);
+          break;
+
+        case 'O':
+          alert('Player O wins!');
+          setXturn(startingPlayer === 'X');
+          setStartingPlayer(startingPlayer === 'X' ? 'O' : 'X');
+          setGrid(arr);
+          break;
+
+        case 'DRAW':  
+          alert("it's a draw");
+          setXturn(startingPlayer === 'X');
+          setStartingPlayer(startingPlayer === 'X' ? 'O' : 'X');
+          setGrid(arr);
+      }      
     }
 
-    if(evaluateWinner(board) === 10) {
-      ClearBoard();
-      alert("Jogador O venceu!");
+    if (winner !== 'noWinner') {
+      declareWinner(winner);
     }
-    
-    else if(evaluateWinner(board) === -10) {
-      ClearBoard();
-      alert("Jogador X venceu!");
-    }
-    
-    else if(isBoardFull()){
-      ClearBoard();
-      alert("Game Draw");
-    }
-  }, [board]);
-
-  function ClearBoard() {
-    setStartingTurn(startingTurn === 'X' ? 'O' : 'X');
-    setXTurn(startingTurn === 'X');
-    setBoard(['-','-','-','-','-','-','-','-','-',]);
-  }
+  }, [grid, startingPlayer])
 
   return (
     <>
@@ -216,21 +125,21 @@ const Board: React.FC<BoardProps> = ({ gameMode }) => {
     </TitleContainer>
     <ContainerRow>
       <ContainerColumn>
-        <Square onClick={() => handleClick(0)}>{board[0]}</Square>
-        <Square onClick={() => handleClick(3)}>{board[3]}</Square>
-        <Square onClick={() => handleClick(6)}>{board[6]}</Square>
+        <Square onClick={() => handleClick(0)}>{grid[0]}</Square>
+        <Square onClick={() => handleClick(3)}>{grid[3]}</Square>
+        <Square onClick={() => handleClick(6)}>{grid[6]}</Square>
       </ContainerColumn>
 
       <ContainerColumn>
-        <Square onClick={() => handleClick(1)}>{board[1]}</Square>
-        <Square onClick={() => handleClick(4)}>{board[4]}</Square>
-        <Square onClick={() => handleClick(7)}>{board[7]}</Square>
+        <Square onClick={() => handleClick(1)}>{grid[1]}</Square>
+        <Square onClick={() => handleClick(4)}>{grid[4]}</Square>
+        <Square onClick={() => handleClick(7)}>{grid[7]}</Square>
       </ContainerColumn>
 
       <ContainerColumn>
-        <Square onClick={() => handleClick(2)}>{board[2]}</Square>
-        <Square onClick={() => handleClick(5)}>{board[5]}</Square>
-        <Square onClick={() => handleClick(8)}>{board[8]}</Square>
+        <Square onClick={() => handleClick(2)}>{grid[2]}</Square>
+        <Square onClick={() => handleClick(5)}>{grid[5]}</Square>
+        <Square onClick={() => handleClick(8)}>{grid[8]}</Square>
       </ContainerColumn>
 
     </ContainerRow>
@@ -238,5 +147,5 @@ const Board: React.FC<BoardProps> = ({ gameMode }) => {
   );
 };
 
-export default Board;
+export default GameBoard;
 

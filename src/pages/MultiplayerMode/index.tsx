@@ -8,15 +8,15 @@ const MultiplayerMode: React.FC = () => {
   const history = useHistory();
 
   function goToGame() {
-    history.push('/game');
+    history.push('/game/local');
   }
 
   return (
     <Container>
       Multiplayer
       <MenuContainer>
-        <button>Host Game</button>
-        <button>Join Room</button>
+        <button>Criar partida</button>
+        <button>Localizar partida</button>
         <button onClick={goToGame}>Local</button>
       </MenuContainer>
     </Container>

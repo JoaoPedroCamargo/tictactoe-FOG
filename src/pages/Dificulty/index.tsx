@@ -3,17 +3,23 @@ import { useHistory } from 'react-router-dom';
 
 import {Container, MenuContainer} from './styles';
 
+type GameProps = 'easy' | 'meddium' | 'hard';
+
 const Dificulty: React.FC = () => {
+  const history = useHistory();
+  
+  const goToGame = (gameMode: GameProps) => {
+    history.push(`/game/${gameMode}`);
+  }
+
   return (
     <Container>
-      Select your dificulty
+      Selecione a dificuldade
       <MenuContainer>
-        <button>Easy</button>
-        <button>Medium</button>
-        <button>Hard</button>
+        <button onClick={() => {goToGame('easy')}}>Fácil</button>
+        <button onClick={() => {goToGame('meddium')}}>Médio</button>
+        <button onClick={() => {goToGame('hard')}}>Difícil</button>
       </MenuContainer>
-      
-      
     </Container>
   );
 };

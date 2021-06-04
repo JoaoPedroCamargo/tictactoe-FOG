@@ -11,8 +11,8 @@ const Routes: React.FC = () => (
   <Switch>
     <Route exact path="/" component={Home} />
     <Route path="/HowToPlay" component={HowToPlay} />
-    <Route path="/gameDificulty" component={Dificulty} />
-    <Route path="/game" component={Game} />
+    <Route path="/singleplayer" component={Dificulty} />
+    <Route path="/game/:difficulty" component={Game} />
     <Route path="/multiplayer" component={MultiplayerMode} />
   </Switch>
 );

@@ -1,13 +1,18 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import Board from '../../components/Board/index';
 
+interface GameProps {
+  difficulty: 'easy' | 'meddium' | 'hard' | 'local' | 'online';
+}
 
-const Game: React.FC = () => {
+const Game: React.FC<GameProps> = () => {
+  const { difficulty } = useParams<GameProps>();
+
   return (
     <>
-    <Board gameMode={"pvp"}/>
+    <Board gameMode={difficulty}/>
     </>
   );
 };

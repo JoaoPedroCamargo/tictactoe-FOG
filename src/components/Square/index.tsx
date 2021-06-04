@@ -1,16 +1,16 @@
-import React, { MouseEventHandler, ReactChildren } from 'react';
+import React, { MouseEventHandler } from 'react';
 
 import {Container} from './styles'
 
 interface SquareProps {
   onClick: MouseEventHandler;
-  children: '-' | 'X' | 'O';
+  children: null | 'X' | 'O';
 }
 
 const Square: React.FC<SquareProps> = ({ children, onClick }) => {
   return (
     <Container onClick={onClick}>
-        { children === '-' ? ' ' : children}
+        { children === null ? ' ' : children}
     </Container>
   );
 };

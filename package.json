@@ -1,5 +1,5 @@
 {
-  "name": "hash-game",
+  "name": "tictactoe-fog",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
