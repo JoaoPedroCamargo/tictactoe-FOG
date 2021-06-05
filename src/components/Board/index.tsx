@@ -37,22 +37,12 @@ const GameBoard: React.FC<BoardProps> = ({ gameMode }) => {
     const emptyIndices = board.getEmptyPos(grid);
 
     let indexMove;
+    if (emptyIndices.length !== 0){
 
-    switch (gameMode) {
-      case 'easy':
-        const moveProbEasy = !board.isEmpty(grid) && Math.random() < 0.5;
-        if (moveProbEasy) {
-          indexMove = minimax(board, Xturn)[1];
-        } else {
-          do{
-            indexMove = Math.round(Math.random() * 8);
-          } while(!emptyIndices.includes(indexMove));
-        }
-        break;
-
-        case 'meddium':
-          const moveProbMeddium = !board.isEmpty(grid) && Math.random() < 0.7;
-          if (moveProbMeddium) {
+      switch (gameMode) {
+        case 'easy':
+          const moveProbEasy = !board.isEmpty(grid) && Math.random() < 0.5;
+          if (moveProbEasy) {
             indexMove = minimax(board, Xturn)[1];
           } else {
             do{
@@ -60,14 +50,26 @@ const GameBoard: React.FC<BoardProps> = ({ gameMode }) => {
             } while(!emptyIndices.includes(indexMove));
           }
           break;
+  
+          case 'meddium':
+            const moveProbMeddium = !board.isEmpty(grid) && Math.random() < 0.7;
+            if (moveProbMeddium) {
+              indexMove = minimax(board, Xturn)[1];
+            } else {
+              do{
+                indexMove = Math.round(Math.random() * 8);
+              } while(!emptyIndices.includes(indexMove));
+            }
+            break;
+  
+          case 'hard':
+            default:
+              indexMove = board.isEmpty(grid) ? Math.round(Math.random() * 8) : minimax(board, Xturn)[1];
+      }
 
-        case 'hard':
-          default:
-            indexMove = board.isEmpty(grid) ? Math.round(Math.random() * 8) : minimax(board, Xturn)[1];
-    }
-
-    if(!grid[indexMove]){
-      move(indexMove);
+      if(!grid[indexMove]){
+        move(indexMove);
+      }
     }
   },[Xturn, gameMode, grid, move]);
 
