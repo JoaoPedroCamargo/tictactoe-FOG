@@ -93,28 +93,23 @@ const GameBoard: React.FC<BoardProps> = ({ gameMode }) => {
       switch (winner) {
         case 'X':
           alert('Player X wins!');
-          setXturn(startingPlayer === 'X');
-          setStartingPlayer(startingPlayer === 'X' ? 'O' : 'X');
-          setGrid(arr);
           break;
 
         case 'O':
           alert('Player O wins!');
-          setXturn(startingPlayer === 'X');
-          setStartingPlayer(startingPlayer === 'X' ? 'O' : 'X');
-          setGrid(arr);
           break;
 
         case 'DRAW':  
           alert("it's a draw");
-          setXturn(startingPlayer === 'X');
-          setStartingPlayer(startingPlayer === 'X' ? 'O' : 'X');
-          setGrid(arr);
+          
       }      
     }
 
     if (winner !== 'noWinner') {
       declareWinner(winner);
+      setGrid(arr);
+      setXturn(startingPlayer !== 'X');
+      setStartingPlayer(startingPlayer === 'X' ? 'O' : 'X');
     }
   }, [grid, startingPlayer])
 
