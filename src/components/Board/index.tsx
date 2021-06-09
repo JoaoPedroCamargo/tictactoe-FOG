@@ -51,20 +51,20 @@ const GameBoard: React.FC<BoardProps> = ({ gameMode }) => {
           }
           break;
   
-          case 'meddium':
-            const moveProbMeddium = !board.isEmpty(grid) && Math.random() < 0.7;
-            if (moveProbMeddium) {
-              indexMove = minimax(board, Xturn)[1];
-            } else {
-              do{
-                indexMove = Math.round(Math.random() * 8);
-              } while(!emptyIndices.includes(indexMove));
-            }
-            break;
-  
-          case 'hard':
-            default:
-              indexMove = board.isEmpty(grid) ? Math.round(Math.random() * 8) : minimax(board, Xturn)[1];
+        case 'meddium':
+          const moveProbMeddium = !board.isEmpty(grid) && Math.random() < 0.8;
+          if (moveProbMeddium) {
+            indexMove = minimax(board, Xturn)[1];
+          } else {
+            do{
+              indexMove = Math.round(Math.random() * 8);
+            } while(!emptyIndices.includes(indexMove));
+          }
+          break;
+
+        case 'hard':
+          default:
+            indexMove = board.isEmpty(grid) ? Math.round(Math.random() * 8) : minimax(board, Xturn)[1];
       }
 
       if(!grid[indexMove]){
@@ -75,13 +75,13 @@ const GameBoard: React.FC<BoardProps> = ({ gameMode }) => {
 
   useEffect(() => {
     if (!Xturn && gameMode !== 'local'){
-      IAmove();
-      setXturn(!Xturn);
-    }
+        IAmove();
+        setXturn(!Xturn);
+    } 
   }, [IAmove, Xturn, gameMode]);
 
   const handleClick = (index: number) => {
-    if(grid[index] === null) {
+    if(grid[index] === null && Xturn) {
       move(index);
       setXturn(!Xturn);
     }
@@ -108,10 +108,12 @@ const GameBoard: React.FC<BoardProps> = ({ gameMode }) => {
     }
 
     if (winner !== 'noWinner') {
-      declareWinner(winner);
-      setGrid(arr);
-      setXturn(startingPlayer !== 'X');
-      setStartingPlayer(startingPlayer === 'X' ? 'O' : 'X');
+      setTimeout(() => {
+        setGrid(arr);
+        declareWinner(winner);
+        setXturn(startingPlayer !== 'X');
+        setStartingPlayer(startingPlayer === 'X' ? 'O' : 'X');
+      }, 500);
     }
   }, [grid, startingPlayer])
 
