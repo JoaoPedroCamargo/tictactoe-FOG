@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import socketIoClient from 'socket.io-client';
 import { useHistory } from 'react-router';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import Square from '../Square/index';
 
