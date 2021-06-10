@@ -151,9 +151,7 @@ const OnlineGameBoard: React.FC<RoomProps> = ({ roomCode }) => {
         </ContainerRow>
 
         <TitleContainer>
-            <CopyToClipboard text={`https://tictactoefog.netlify.app/onlineGame/${roomCode}`}>
-                <button>Room: {roomCode}</button>
-            </CopyToClipboard>
+            Room: {roomCode}
         </TitleContainer>
         </>
     );
