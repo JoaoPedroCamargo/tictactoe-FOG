@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import socketIoClient from 'socket.io-client';
 import { useHistory } from 'react-router';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import Square from '../Square/index';
 
@@ -124,7 +125,10 @@ const OnlineGameBoard: React.FC<RoomProps> = ({ roomCode }) => {
     return (
         <>
         <TitleContainer>
-            {currentTurn === currentPlayer ? <>Sua vez</> : <>Vez do oponente</>}
+            {roomFull ?
+            currentTurn === currentPlayer ? <>Sua vez</> : <>Vez do oponente</>
+            : <>Esperando outro jogador</>
+            }
         </TitleContainer>
         <ContainerRow>
             <ContainerColumn>
@@ -147,7 +151,9 @@ const OnlineGameBoard: React.FC<RoomProps> = ({ roomCode }) => {
         </ContainerRow>
 
         <TitleContainer>
-            Room: {roomCode}
+            <CopyToClipboard text={`https://tictactoefog.netlify.app/onlineGame/${roomCode}`}>
+                <button>Room: {roomCode}</button>
+            </CopyToClipboard>
         </TitleContainer>
         </>
     );

@@ -7,7 +7,7 @@ interface GameProps {
   difficulty: 'easy' | 'meddium' | 'hard' | 'local' | 'online';
 }
 
-const Game: React.FC<GameProps> = () => {
+const SingleplayerGame: React.FC<GameProps> = () => {
   const { difficulty } = useParams<GameProps>();
 
   return (
@@ -17,5 +17,5 @@ const Game: React.FC<GameProps> = () => {
   );
 };
 
-export default Game;
+export default SingleplayerGame;
 

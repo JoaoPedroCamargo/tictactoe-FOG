@@ -4,8 +4,8 @@ import { Switch, Route } from 'react-router-dom';
 import Home from '../pages/Home/index';
 import HowToPlay from '../pages/HowToPlay/index';
 import Dificulty from '../pages/Dificulty/index';
-import Game from '../pages/Game/index';
-import MultiplayerMode from '../pages/MultiplayerMode/index';
+import Game from '../pages/SingleplayerGame/index';
+import MultiplayerMode from '../pages/Multiplayer/index';
 import OnlineGame from '../pages/OnlineGame/index';
 
 const Routes: React.FC = () => (

@@ -81,7 +81,10 @@ const GameBoard: React.FC<BoardProps> = ({ gameMode }) => {
   }, [IAmove, Xturn, gameMode]);
 
   const handleClick = (index: number) => {
-    if(grid[index] === null && Xturn) {
+    if(grid[index] === null && Xturn && gameMode !== 'local') {
+      move(index);
+      setXturn(!Xturn);
+    } else if (gameMode === 'local' && grid[index] === null){
       move(index);
       setXturn(!Xturn);
     }
@@ -120,7 +123,7 @@ const GameBoard: React.FC<BoardProps> = ({ gameMode }) => {
   return (
     <>
     <TitleContainer>
-      Player: {Xturn ? 'X' : 'O'}
+      {Xturn ? 'Sua vez' : 'Vez do oponente'}
     </TitleContainer>
     <ContainerRow>
       <ContainerColumn>
