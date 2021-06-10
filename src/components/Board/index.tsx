@@ -97,17 +97,17 @@ const GameBoard: React.FC<BoardProps> = ({ gameMode }) => {
 
       switch (winner) {
         case 'X':
-          alert('Player X wins!');
-          break;
+            alert('Jogador X ganhou!');
+            break;
 
         case 'O':
-          alert('Player O wins!');
-          break;
+            alert('Jogador O ganhou!');
+            break;
 
         case 'DRAW':  
-          alert("it's a draw");
-          
-      }      
+            alert("Empate");
+            
+        }         
     }
 
     if (winner !== 'noWinner') {

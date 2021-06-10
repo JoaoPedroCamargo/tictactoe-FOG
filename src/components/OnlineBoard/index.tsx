@@ -98,15 +98,15 @@ const OnlineGameBoard: React.FC<RoomProps> = ({ roomCode }) => {
 
             switch (winner) {
             case 'X':
-                alert('Player X wins!');
+                alert('Jogador X ganhou!');
                 break;
 
             case 'O':
-                alert('Player O wins!');
+                alert('Jogador O ganhou!');
                 break;
 
             case 'DRAW':  
-                alert("it's a draw");
+                alert("Empate");
                 
             }      
         }
